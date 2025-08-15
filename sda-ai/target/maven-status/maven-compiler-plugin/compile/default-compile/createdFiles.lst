@@ -1,0 +1,14 @@
+dbt/ai/dto/PRSuggestionResponse.class
+dbt/ai/dto/GitChangedFile.class
+dbt/ai/dto/PRSummaryResponse.class
+dbt/ai/dto/AnalyzePRRequest.class
+dbt/ai/service/FileService.class
+dbt/ai/service/AIService.class
+dbt/ai/service/SlackService.class
+dbt/ai/dto/GitPRDiffRequest.class
+dbt/ai/dto/GitSourceMetaDataDetailsDTO.class
+dbt/ai/SDAAIMain.class
+dbt/ai/service/SDAVectorStoreService.class
+dbt/ai/feignclient/GitClient.class
+dbt/ai/controller/AIController.class
+dbt/ai/dto/PRSummaryRequest.class
