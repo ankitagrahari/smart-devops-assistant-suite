@@ -33,7 +33,7 @@ The **development process** is divided into 4 phases and 1 option phase.
 
 | Service     |        Endpoint         | Type |                                                 Description |
 |:------------|:-----------------------:|:----:|------------------------------------------------------------:|
-| sda-gateway |                         |      |
+| sda-gateway | http://localhost:8761/  | GET  |                                                      Eureka |
 | sda-git     |        /git/echo        | GET  |                          To check if services are up or not |
 |             |   /git/pr/{prNumber}    | GET  |                         Fetch list of files changed in a PR |
 |             | /git/file/content/{sha} | GET  |                         Fetch the File content based on SHA |
