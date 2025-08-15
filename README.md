@@ -15,7 +15,7 @@ provide suggestion on the code changes. It will also push the review messages to
   `mvn spring-boot:run`
 
 ### Project Structure
-The project structure is divided into 3 different microservices
+The project structure is divided into three different microservices
 - `sda-gateway`: API Gateway
 - `sda-git`: Handles all the Git services. Also handles the git webhook.
 - `sda-ai`: Handles all the AI Services like interaction with AI, loading to vector store. 
