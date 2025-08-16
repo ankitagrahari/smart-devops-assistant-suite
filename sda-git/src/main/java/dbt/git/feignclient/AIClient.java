@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
-@FeignClient("ai-service")
+@FeignClient(value = "sda-ai", url = "http://localhost:8009")
 public interface AIClient {
 
     @PostMapping("/ai/prsummary")
     ResponseEntity<PRSummaryResponse> prSummary(@RequestBody PRSummaryRequest request);
 
-    @PostMapping("/ai/pranalyze")
+    @PostMapping("/ai/pr-analyze")
     PRSuggestionResponse analyzePR(@RequestBody AnalyzePRRequest request);
 
     @PostMapping("/ai/vectorstore")
