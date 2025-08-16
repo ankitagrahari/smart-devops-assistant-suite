@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient("git-service")
+@FeignClient(value = "sda-git", url = "http://localhost:8008")
 public interface GitClient {
 
     @PostMapping("/git/pr/diff")
