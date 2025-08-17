@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
-@FeignClient(value = "sda-ai", url = "http://localhost:8009")
+@FeignClient(name="sda-ai")
 public interface AIClient {
 
     @PostMapping("/ai/prsummary")
