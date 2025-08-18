@@ -1,3 +1,18 @@
 
 *.class
-target
+
+sda-ai/target
+sda-ai/.idea
+sda-ai/.mvn
+
+sda-eureka/target
+sda-eureka/.idea
+sda-eureka/.mvn
+
+sda-gateway/target
+sda-gateway/.idea
+sda-gateway/.mvn
+
+sda-git/target
+sda-git/.idea
+sda-git/.mvn
