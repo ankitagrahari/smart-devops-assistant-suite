@@ -16,3 +16,4 @@ sda-gateway/.mvn
 sda-git/target
 sda-git/.idea
 sda-git/.mvn
+.DS_Store

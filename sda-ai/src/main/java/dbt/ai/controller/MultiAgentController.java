@@ -1,5 +1,6 @@
 package dbt.ai.controller;
 
+import dbt.ai.dto.git.GitPRDiffRequest;
 import dbt.ai.dto.multiagent.MultiAgentResponse;
 import dbt.ai.feignclient.GitClient;
 import dbt.ai.service.multiagent.AgentOrchestrator;
@@ -16,7 +17,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/multiagent")
+@RequestMapping("/ai/multiagent")
 public class MultiAgentController {
 
     VectorStore vectorStore;
@@ -31,10 +32,15 @@ public class MultiAgentController {
         this.gitClient = gitClient;
     }
 
+    @GetMapping("/echo")
+    ResponseEntity<String> echo(){
+        return ResponseEntity.ok("ai/multiagent working...!");
+    }
+
     @GetMapping("/analyze-pr/{prNumber}")
     ResponseEntity<MultiAgentResponse> analyzePRAndGenerateTestCase(@PathVariable String prNumber){
 
-        ResponseEntity<String> prDiffRE = gitClient.fetchPRDiff(prNumber);
+        ResponseEntity<String> prDiffRE = gitClient.fetchPRDiff(new GitPRDiffRequest(prNumber));
         if(prDiffRE.getStatusCode().is2xxSuccessful()) {
             String prDiff = prDiffRE.getBody();
 

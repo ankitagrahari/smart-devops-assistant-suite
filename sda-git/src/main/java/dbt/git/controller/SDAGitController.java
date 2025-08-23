@@ -68,12 +68,10 @@ public class SDAGitController {
      * Fetches the PR difference for the PR URL like
      * https://api.github.com/repos/<owner>/<repo-name>/pulls/<prNumber>.diff
      *
-     * @param prURL
-     * @return
      */
     @PostMapping("/pr/diff")
-    public ResponseEntity<String> fetchPRDiff(@RequestBody String prURL){
-        return gitService.fetchPRDiff(prURL);
+    public ResponseEntity<String> fetchPRDiff(@RequestBody GitPRDiffRequest request){
+        return gitService.fetchPRDiff(request.prURL());
     }
 
     /**

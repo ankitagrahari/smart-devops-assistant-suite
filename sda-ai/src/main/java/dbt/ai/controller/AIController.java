@@ -26,12 +26,12 @@ public class  AIController {
         return ResponseEntity.ok("AI working...!");
     }
 
-    @PostMapping("/pr/summary")
+    @PostMapping("/pr-summary")
     public ResponseEntity<PRSummaryResponse> generateSummary(@RequestBody PRSummaryRequest prSummaryRequest){
         return aiService.generateSummary(prSummaryRequest);
     }
 
-    @PostMapping("/pr/analyze")
+    @PostMapping("/pr-analyze")
     public PRSuggestionResponse analyzePR(@RequestBody AnalyzePRRequest request){
         return aiService.analyzePR(request.prDiff(), request.fileNames());
     }
