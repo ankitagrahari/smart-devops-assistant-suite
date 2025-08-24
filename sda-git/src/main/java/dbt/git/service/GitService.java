@@ -37,19 +37,15 @@ public class GitService {
     private static final Logger logger = LoggerFactory.getLogger(GitService.class);
     private static final String GIT_FILE_TYPE_BLOB = "blob";
 
-    @Value("${git.repo.name}")
-    private String GIT_REPO_NAME;
-    @Value("${git.owner}")
-    private String GIT_OWNER;
-    @Value("${git.api.url}")
-    private String GITHUB_API_URL;
     private final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-
+    private final GitURLGenerator urlGenerator;
     private final RestClient restClient;
     private final GitFileMetaDataRepository gitFileMetaDataRepo;
 
-    public GitService(RestClient.Builder restClientBuilder,
+    public GitService(GitURLGenerator urlGenerator,
+                      RestClient.Builder restClientBuilder,
                       GitFileMetaDataRepository repo) {
+        this.urlGenerator = urlGenerator;
         this.gitFileMetaDataRepo = repo;
         HttpClient httpClient = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.ALWAYS).build();
         this.restClient = restClientBuilder
@@ -66,9 +62,8 @@ public class GitService {
     }
 
     public ResponseEntity<String> fetchPRDiff(String diffURL){
+        logger.info("PRDiff URL:{}", diffURL);
         if(Objects.nonNull(diffURL)){
-            HttpEntity httpEntity = generateHttpEntity();
-//            return restTemplate.exchange(diffURL, HttpMethod.GET, httpEntity, String.class);
             return restClient.get()
                     .uri(URI.create(diffURL))
                     .header(HttpHeaders.AUTHORIZATION, "Bearer "+ System.getenv("GIT_SDA_PAT"))
@@ -82,11 +77,9 @@ public class GitService {
     public ResponseEntity<List<GitChangedFile>> fetchPRFiles(String prNumber){
         try {
             if (Objects.nonNull(prNumber)) {
-                HttpEntity<String> httpEntity = generateHttpEntity();
                 //https://api.github.com/repos/ankitagrahari/smart-devops-assistant/pulls/3/files
-                String gitURL = GITHUB_API_URL + "repos/" + GIT_OWNER + "/" + GIT_REPO_NAME + "/pulls/" + prNumber + "/files";
+                String gitURL = urlGenerator.generateGitPRFileURLByPRNumber(prNumber);
                 logger.info("Fetch PR files: gitURL:{}", gitURL);
-//                return restTemplate.exchange(gitURL, HttpMethod.GET, httpEntity, new ParameterizedTypeReference<>() {});
                 return restClient.get()
                         .uri(URI.create(gitURL))
                         .header(HttpHeaders.AUTHORIZATION, "Bearer "+ System.getenv("GIT_SDA_PAT"))
@@ -103,7 +96,7 @@ public class GitService {
     public String fetchBranchSHA(String branchName) {
         try {
 //            HttpEntity<String> httpEntity = generateHttpEntity();
-            String gitURL = GITHUB_API_URL + "repos/" + GIT_OWNER + "/" + GIT_REPO_NAME + "/branches/" + branchName;
+            String gitURL = urlGenerator.generateGitBranchURLByName(branchName);
             logger.info("Fetch files from branch {} gitURL:{}", branchName, gitURL);
 
             ResponseEntity<String> response = restClient.get()
@@ -152,7 +145,7 @@ public class GitService {
         }
 //        HttpEntity<String> httpEntity = generateHttpEntity();
 //          https://api.github.com/repos/{{owner}}/{{repo}}/git/trees/{{sha}}?recursive=1
-        String gitURL = GITHUB_API_URL + "repos/" + GIT_OWNER + "/" + GIT_REPO_NAME + "/git/trees/" + sha + "?recursive=1";
+        String gitURL = urlGenerator.generateGitFileMetaDataURLBySHA(sha);
         logger.info("Fetch git tree gitURL:{}", gitURL);
 
         ResponseEntity<GitTreeResponse> response = restClient.get()
@@ -199,16 +192,12 @@ public class GitService {
         return "";
     }
 
-    public String generateGitURL(String sha){
-        return GITHUB_API_URL + "repos/" + GIT_OWNER + "/" + GIT_REPO_NAME + "/git/blobs/" + sha;
-    }
-
     public GitSourceMetaDataDetailsDTO getGitFileMetaDataDTO(GitChangedFile gcf) {
         GitSourceMetaData entity = gitFileMetaDataRepo.findByPathAndType(gcf.filename(), GIT_FILE_TYPE_BLOB);
         if(Objects.nonNull(entity)) {
             logger.info("fetch from vector store:{}", entity);
         } else {
-            String gitFileContentURL = generateGitURL(gcf.sha());
+            String gitFileContentURL = urlGenerator.generateGitURLBySHA(gcf.sha());
             logger.info("Not found in the H2 database. Fetch from URL {}", gitFileContentURL);
             entity = new GitSourceMetaData(gcf.filename(), GIT_FILE_TYPE_BLOB, gcf.sha(), 0, gitFileContentURL);
             gitFileMetaDataRepo.save(entity);

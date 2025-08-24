@@ -4,6 +4,7 @@ import dbt.git.dto.GitChangedFile;
 import dbt.git.dto.GitPRDiffRequest;
 import dbt.git.dto.GitSourceMetaDataDetailsDTO;
 import dbt.git.service.GitService;
+import dbt.git.service.GitURLGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.util.Pair;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Base64;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/git")
@@ -19,10 +21,13 @@ public class SDAGitController {
 
     private static final Logger logger = LoggerFactory.getLogger(SDAGitController.class);
 
-    GitService gitService;
+    private final GitService gitService;
+    private final GitURLGenerator urlGenerator;
 
-    public SDAGitController(GitService gitService) {
+    public SDAGitController(GitService gitService,
+                            GitURLGenerator urlGenerator) {
         this.gitService = gitService;
+        this.urlGenerator = urlGenerator;
     }
 
     @GetMapping("/echo")
@@ -45,7 +50,7 @@ public class SDAGitController {
 
     @GetMapping("/file/content/{sha}")
     public String fetchFileContentBySHA(@PathVariable String sha){
-        String  encodedContent = gitService.fetchChangedFileContentFromGit(gitService.generateGitURL(sha));
+        String  encodedContent = gitService.fetchChangedFileContentFromGit(urlGenerator.generateGitURLBySHA(sha));
         encodedContent = encodedContent.replaceAll("\\n", "");
         logger.debug("encoded file content {}", encodedContent);
         String decodedStr = new String(Base64.getDecoder().decode(encodedContent));
@@ -71,7 +76,11 @@ public class SDAGitController {
      */
     @PostMapping("/pr/diff")
     public ResponseEntity<String> fetchPRDiff(@RequestBody GitPRDiffRequest request){
-        return gitService.fetchPRDiff(request.prURL());
+        if(Objects.nonNull(request.prNumber()) && !request.prNumber().isEmpty()){
+            return gitService.fetchPRDiff(urlGenerator.generateGitPRDiffURLByPRNumber(request.prNumber()));
+        } else {
+            return gitService.fetchPRDiff(request.prURL());
+        }
     }
 
     /**
