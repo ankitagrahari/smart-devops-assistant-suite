@@ -2,6 +2,8 @@ package dbt.ai.service.multiagent;
 
 import dbt.ai.dto.multiagent.MultiAgentResponse;
 import dbt.ai.dto.multiagent.TestGeneratorResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.ai.chat.prompt.Prompt;
@@ -15,6 +17,7 @@ import java.util.concurrent.CompletableFuture;
 @Service
 public class TestGeneratorAgent implements Agents{
 
+    private static final Logger log = LoggerFactory.getLogger(TestGeneratorAgent.class);
     ChatClient chatClient;
 
     public TestGeneratorAgent(ChatClient.Builder chatClientBuilder) {
@@ -71,6 +74,10 @@ public class TestGeneratorAgent implements Agents{
 
         PromptTemplate promptTemplate = new PromptTemplate(prompt);
         Prompt request = promptTemplate.create(Map.of("context", context, "prDiff", prDiff));
+
+        log.info("Test Generator Agent-----------");
+        log.info(request.getContents());
+        log.info("-------------------------------");
         TestGeneratorResponse response = chatClient
                 .prompt(request)
                 .call()

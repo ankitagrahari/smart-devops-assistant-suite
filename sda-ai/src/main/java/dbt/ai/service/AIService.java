@@ -4,7 +4,7 @@ import dbt.ai.dto.PRSuggestionResponse;
 import dbt.ai.dto.PRSummaryRequest;
 import dbt.ai.dto.PRSummaryResponse;
 import dbt.ai.dto.git.GitPRDiffRequest;
-import dbt.ai.feignclient.GitClient;
+import dbt.ai.clients.GitClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.client.ChatClient;
@@ -51,8 +51,8 @@ public class AIService {
             logger.debug("Request Data:{}", prSummaryRequest.getPrUrl());
 
             ResponseEntity<String> prDiffResponse = gitClient.fetchPRDiff(
-                    new GitPRDiffRequest(prSummaryRequest.getPrUrl()+".diff"));
-            String prDiffStr = "";
+                    new GitPRDiffRequest(prSummaryRequest.getPrUrl()+".diff", ""));
+            String prDiffStr;
             if(prDiffResponse.getStatusCode().is2xxSuccessful())
                 prDiffStr = prDiffResponse.getBody();
             else

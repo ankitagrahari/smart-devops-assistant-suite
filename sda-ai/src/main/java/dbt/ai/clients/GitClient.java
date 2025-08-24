@@ -1,4 +1,4 @@
-package dbt.ai.feignclient;
+package dbt.ai.clients;
 
 import dbt.ai.dto.GitChangedFile;
 import dbt.ai.dto.GitSourceMetaDataDetailsDTO;

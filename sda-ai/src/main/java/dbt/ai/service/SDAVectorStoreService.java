@@ -1,7 +1,7 @@
 package dbt.ai.service;
 
 import dbt.ai.dto.GitChangedFile;
-import dbt.ai.feignclient.GitClient;
+import dbt.ai.clients.GitClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ai.document.Document;

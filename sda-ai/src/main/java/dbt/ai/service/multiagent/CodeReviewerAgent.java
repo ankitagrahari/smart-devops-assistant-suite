@@ -1,6 +1,8 @@
 package dbt.ai.service.multiagent;
 
 import dbt.ai.dto.multiagent.CodeReviewerResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.ai.chat.prompt.Prompt;
@@ -13,6 +15,8 @@ import java.util.concurrent.CompletableFuture;
 
 @Service
 public class CodeReviewerAgent implements Agents{
+
+    private static final Logger log = LoggerFactory.getLogger(CodeReviewerAgent.class);
 
     ChatClient chatClient;
 
@@ -33,16 +37,16 @@ public class CodeReviewerAgent implements Agents{
                 You are a senior software engineer.
                 Given the context: {context}
                 And this pull request difference {prDiff},
-                
                 Review the code, list any issues or improvements, and rate the code
                 quality from 1-10 with 1 being bad and 10 being no issues at all.
-                
-                If you face any issues or don't find a suitable answer, reply with
-                'Error in find result. Try again!!'
                 """;
 
         PromptTemplate promptTemplate = new PromptTemplate(prompt);
         Prompt request = promptTemplate.create(Map.of("context", context, "prDiff", prDiff));
+
+        log.info("Code Reviewer Prompt---------");
+        log.info(request.toString());
+        log.info("-----------------------------");
         CodeReviewerResponse response = chatClient
                 .prompt(request)
                 .call()
