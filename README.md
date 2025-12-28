@@ -130,9 +130,3 @@ The **development process** is divided into 4 phases and 1 option phase.
 - [x] Extract PR summary for each file
 - [x] Project Re-structure into different modules
 - [ ] Add PR URL and Author for Slack communication.
-
-### Blogs series
-- Meet your smart devops assistant: Project Vision and Stack
-- Github meets AI: Auto-reviewing PR with LLMs
-- Training the Brain: How I used RAG for Smarter PR Analysis
-- AI Agents in Action: Building multi-agent pipelines for Devops
