@@ -70,9 +70,23 @@ public class AIService {
 
 
     public PRSuggestionResponse analyzePR(String prDiff, List<String> fileNames){
-        PromptTemplate pt = new PromptTemplate("""
-            Given the following context from the codebase and this PR diff {prDiff}, summarize and suggest improvements.
-        """);
+//        PromptTemplate pt = new PromptTemplate("""
+//            Given the following context from the codebase and this PR diff {prDiff}, summarize and suggest improvements.
+//        """);
+        PromptTemplate analyzePRTemplate = new PromptTemplate("""
+                You are a senior software engineer.
+                    Given this PR diff: {diff},
+                    provide:
+                    1. A short summary
+                    2. Suggestions for improvements
+                    3. Risks to watch for
+                    Respond in JSON:
+                    {
+                      "summary": "...",
+                      "suggestions": ["..."],
+                      "risks": ["..."]
+                    }
+                """)
 
         String files = String.join("','", fileNames);
         logger.info("files: {}", files);
@@ -86,7 +100,7 @@ public class AIService {
                 .build();
 
         PRSuggestionResponse response = chatClient
-                .prompt(pt.create(Map.of("prDiff", prDiff)))
+                .prompt(analyzePRTemplate.create(Map.of("diff", prDiff)))
                 .advisors(qaAdvisor)
                 .call()
                 .entity(PRSuggestionResponse.class);
@@ -96,15 +110,29 @@ public class AIService {
     }
 
     public PRSummaryResponse generateAISummary(PRSummaryRequest prSummaryRequest){
-        PromptTemplate pt = new PromptTemplate("""
-            Given the following PR title {title}, description {description} and optional difference {diff}, generate a clear 1-2 sentence summary
-            describing what this PR does ?
-        """);
+//        PromptTemplate pt = new PromptTemplate("""
+//            Given the following PR title {title}, description {description} and optional difference {diff}, generate a clear 1-2 sentence summary
+//            describing what this PR does ?
+//        """);
+        PromptTemplate summaryTemplate = new PromptTemplate("""
+                You are a senior software reviewer.
+                    Summarize the following PR in 2-3 sentences.
+                    Highlight potential risks if visible.
+                    PR Title: {title}
+                    PR Description: {description}
+                    PR Diff: {diff}
+                """)
         return chatClient
-                .prompt(pt.create(Map.of("title", prSummaryRequest.getTitle(),
+                .prompt(summaryTemplate.create(Map.of("title", prSummaryRequest.getTitle(),
                         "description", prSummaryRequest.getDescription(),
                         "diff", prSummaryRequest.getDiff())))
                 .call()
                 .entity(PRSummaryResponse.class);
+
+
+        cipher.init(Cipher.ENCRYPT_MODE,
+                secretKey, gcmParameterSpec, secRandom);
+        cipher.updateAAD(aadTagData);
+        byte[] encryptedBytes = cipher.doFinal(bytePassword);
     }
 }

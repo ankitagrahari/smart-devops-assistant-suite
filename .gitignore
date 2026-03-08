@@ -17,3 +17,6 @@ sda-git/target
 sda-git/.idea
 sda-git/.mvn
 .DS_Store
+/sda-git/target
+/sda-git/target
+/sda-git/target/classes
