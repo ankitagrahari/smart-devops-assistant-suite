@@ -16,6 +16,7 @@ import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.Cipher;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -86,7 +87,7 @@ public class AIService {
                       "suggestions": ["..."],
                       "risks": ["..."]
                     }
-                """)
+                """);
 
         String files = String.join("','", fileNames);
         logger.info("files: {}", files);
@@ -121,18 +122,12 @@ public class AIService {
                     PR Title: {title}
                     PR Description: {description}
                     PR Diff: {diff}
-                """)
+                """);
         return chatClient
                 .prompt(summaryTemplate.create(Map.of("title", prSummaryRequest.getTitle(),
                         "description", prSummaryRequest.getDescription(),
                         "diff", prSummaryRequest.getDiff())))
                 .call()
                 .entity(PRSummaryResponse.class);
-
-
-        cipher.init(Cipher.ENCRYPT_MODE,
-                secretKey, gcmParameterSpec, secRandom);
-        cipher.updateAAD(aadTagData);
-        byte[] encryptedBytes = cipher.doFinal(bytePassword);
     }
 }

@@ -1,31 +1,31 @@
 package dbt.ai.service;
 
 import dbt.ai.dto.PRSummaryResponse;
-import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.RestClient;
 
 @Service
 public class SlackService {
 
     private final String SLACK_WEBHOOK_INCOMING_URL;
 
-    private final RestTemplate restTemplate;
+    private final RestClient restClient;
 
-    public SlackService(RestTemplateBuilder restTemplateBuilder) {
-        this.restTemplate = restTemplateBuilder.build();
+    public SlackService(RestClient.Builder restClientBuilder) {
+        this.restClient = restClientBuilder.build();
         SLACK_WEBHOOK_INCOMING_URL = System.getenv("SLACK_WEBHOOK_INCOMING_URL");
     }
 
-    public void sendPRReviewToSlack(PRSummaryResponse prSummaryResponse){
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        String payload = "{\"text\":\""+prSummaryResponse.summary()+"\"}";
-        HttpEntity<String> entity = new HttpEntity<>(payload, headers);
+    public void sendPRReviewToSlack(PRSummaryResponse prSummaryResponse) {
+        String payload = "{\"text\":\"" + prSummaryResponse.summary() + "\"}";
 
-        restTemplate.postForEntity(SLACK_WEBHOOK_INCOMING_URL, entity, String.class);
+        restClient.post()
+                .uri(SLACK_WEBHOOK_INCOMING_URL)
+                .body(payload)
+                .headers(httpHeaders -> httpHeaders.setContentType(MediaType.APPLICATION_JSON))
+                .retrieve()
+                .toEntity(String.class);
     }
+
 }

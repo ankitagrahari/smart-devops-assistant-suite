@@ -3,29 +3,14 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.5.4</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<groupId>org.backendbrilliance</groupId>
+		<artifactId>smart-devops-assistant-suite</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<groupId>dbt.sda</groupId>
-	<artifactId>sda-gateway</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>sda-gateway</name>
-	<description>API Gateway for Smart Devops Assistant</description>
-	<url/>
-	<licenses>
-		<license/>
-	</licenses>
-	<developers>
-		<developer/>
-	</developers>
-	<scm>
-		<connection/>
-		<developerConnection/>
-		<tag/>
-		<url/>
-	</scm>
+
+	<artifactId>sda-eureka</artifactId>
+	<name>sda-eureka</name>
+
 	<properties>
 		<java.version>24</java.version>
 		<spring-cloud.version>2025.0.0</spring-cloud.version>
