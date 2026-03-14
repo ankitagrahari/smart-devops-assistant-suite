@@ -26,7 +26,7 @@ The **development process** is divided into 4 phases and 1 option phase.
 - [x] Phase 2: Integrate Github + Slack (Create a working CI workflow that uses AI for code review summaries)
 - [x] Phase 3: RAG with Vector Store (Make AI context-aware using your actual codebase/docs)
 - [x] Phase 3.1: Restructured the Code base into multiple microservices using API Gateway.
-- [ ] Phase 4: AI Agents & Coordination (Use multi-agents for dedicated tasks)
+- [x] Phase 4: AI Agents & Coordination (Use multi-agents for dedicated tasks)
 - [ ] Phase 5: Dashboard and Enhancements (Add visibility and manual controls)
 
 ### Endpoints
@@ -129,4 +129,4 @@ The **development process** is divided into 4 phases and 1 option phase.
 - [ ] Tracing
 - [x] Extract PR summary for each file
 - [x] Project Re-structure into different modules
-- [ ] Add PR URL and Author for Slack communication.
+- [x] Add PR URL and Author for Slack communication.
